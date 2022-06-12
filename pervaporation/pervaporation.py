@@ -9,7 +9,7 @@ from conditions import Conditions
 from diffusion_curve import DiffusionCurve, DiffusionCurveSet
 from membrane import Membrane
 from mixture import Composition, CompositionType, Mixture, get_nrtl_partial_pressures
-from permeance import Permeance, Units
+from permeance import Permeance, PermeanceUnits
 from process import ProcessModel
 from utils import R
 from optimizer import Measurements, fit, PervaporationFunction
@@ -105,12 +105,12 @@ class Pervaporation:
             first_component_permeance = self.membrane.get_permeance(
                 feed_temperature, self.mixture.first_component
             ).convert(
-                to_units=Units().kg_m2_h_kPa, component=self.mixture.first_component
+                to_units=PermeanceUnits.kg_m2_h_kPa, component=self.mixture.first_component
             )
             second_component_permeance = self.membrane.get_permeance(
                 feed_temperature, self.mixture.second_component
             ).convert(
-                to_units=Units().kg_m2_h_kPa, component=self.mixture.second_component
+                to_units=PermeanceUnits.kg_m2_h_kPa, component=self.mixture.second_component
             )
 
         initial_fluxes: typing.Tuple[float, float] = numpy.multiply(

@@ -64,12 +64,12 @@ conditions = Conditions(
 
 pervaporation = Pervaporation(membrane, all_mixtures.h2o_etoh)
 ideal_model = pervaporation.ideal_isothermal_process(
-    conditions=conditions, number_of_steps=1000, delta_hours=0.125
+    conditions=conditions, number_of_steps=100, delta_hours=0.125
 )
 non_ideal_model = pervaporation.non_ideal_isothermal_process(
     conditions=conditions,
     diffusion_curves=membrane.diffusion_curve_sets[0],
-    number_of_steps=1000,
+    number_of_steps=100,
     delta_hours=0.125,
     n_first=0,
     m_first=0,
@@ -82,4 +82,5 @@ x = ideal_model.time
 y_ideal = [ideal_model.feed_composition[i].first for i in range(len(x))]
 y_non_ideal = [non_ideal_model.feed_composition[i].first for i in range(len(x))]
 plt.plot(x, y_ideal, x, y_non_ideal)
+plt.legend(['Ideal', 'Non-ideal'])
 plt.show()

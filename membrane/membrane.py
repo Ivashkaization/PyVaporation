@@ -6,7 +6,7 @@ import numpy
 from component import Component
 from diffusion_curve import DiffusionCurveSet
 from experiments import IdealExperiments
-from permeance import Permeance, Units
+from permeance import Permeance, PermeanceUnits
 from utils import R
 
 
@@ -99,7 +99,7 @@ class Membrane:
         )
 
         given_permeance = component_experiments.experiments[index].permeance.convert(
-            to_units=Units().kg_m2_h_kPa, component=component
+            to_units=PermeanceUnits.kg_m2_h_kPa, component=component
         )
 
         if (
@@ -157,10 +157,10 @@ class Membrane:
         elif calculation_type == "molar":
             return (
                 self.get_permeance(temperature, first_component)
-                .convert(to_units=Units().SI, component=first_component)
+                .convert(to_units=PermeanceUnits.si, component=first_component)
                 .value
                 / self.get_permeance(temperature, second_component)
-                .convert(to_units=Units().SI, component=second_component)
+                .convert(to_units=PermeanceUnits.si, component=second_component)
                 .value
             )
 
