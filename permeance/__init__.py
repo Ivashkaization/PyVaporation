@@ -1,3 +1,3 @@
-from .permeance import Permeance, Units
+from .permeance import Permeance, PermeanceUnits
 
-__all__ = ["Permeance", "Units"]
+__all__ = ["Permeance", "PermeanceUnits"]

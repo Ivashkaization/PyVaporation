@@ -1,21 +1,21 @@
 import typing
-
 import attr
+
+from enum import Enum
 
 from component import Component
 
 
-@attr.s(auto_attribs=True)
-class Units:
-    GPU: str = "GPU"
-    SI: str = "SI"
-    kg_m2_h_kPa: str = "kg/(m2*h*kPa)"
+class PermeanceUnits(Enum):
+    gpu: str = 'GPU'
+    si: str = 'SI'
+    kg_m2_h_kPa: str = 'kg / (m2 * h * kPa)'
 
 
 @attr.s(auto_attribs=True)
 class Permeance:
     value: float
-    units: str = Units().kg_m2_h_kPa
+    units: str = PermeanceUnits('kg / (m2 * h * kPa)')
 
     def convert(
         self,
@@ -31,7 +31,7 @@ class Permeance:
         if to_units == self.units:
             return self
 
-        if component is None and to_units == Units().kg_m2_h_kPa:
+        if component is None and to_units == PermeanceUnits.kg_m2_h_kPa:
             raise ValueError(
                 "For conversion from and to kg/(m2*h*kPa) Component must be specified "
             )

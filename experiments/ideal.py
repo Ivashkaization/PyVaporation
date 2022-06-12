@@ -5,10 +5,8 @@ import attr
 import pandas
 
 from component import AllComponents, Component
-from permeance import Permeance
-
-# def convert_component(name: str, all_components: AllComponents) -> Component:
-#     return getattr(all_components, name)
+from permeance import Permeance, PermeanceUnits
+from config import Config
 
 
 @attr.s(auto_attribs=True)
@@ -24,6 +22,12 @@ class IdealExperiment:
     permeance: Permeance
     activation_energy: typing.Optional[float] = None
     comment: typing.Optional[str] = None
+
+    def __attrs_post_init__(self):
+        if not self.permeance.units == PermeanceUnits.kg_m2_h_kPa:
+            self.permeance = self.permeance.convert(
+                to_units=PermeanceUnits.kg_m2_h_kPa, component=self.component  # TODO: learn how to treat Enum!!!
+            )
 
     @classmethod
     def from_dict(
@@ -45,11 +49,15 @@ class IdealExperiments:
         return len(self.experiments)
 
     @classmethod
-    def from_csv(cls, path: typing.Union[str, Path]) -> "IdealExperiments":
+    def from_csv(cls, path: typing.Union[str, Path], all_components: AllComponents) -> "IdealExperiments":
         frame = pandas.read_csv(path)
 
         experiments = []
         for _, row in frame.iterrows():
-            experiments.append(IdealExperiment.from_dict(row.to_dict()))
+            experiments.append(IdealExperiment.from_dict(row.to_dict(), all_components=all_components))
 
         return IdealExperiments(experiments=experiments)
+
+    @classmethod
+    def from_config(cls, config: Config) -> 'IdealExperiments':
+        return cls.from_csv(config.ideal_experiment_path)

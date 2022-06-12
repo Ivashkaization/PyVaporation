@@ -3,6 +3,7 @@ from pathlib import Path
 
 import attr
 import numpy
+import pandas
 
 from mixture import Composition, CompositionType, Mixture, get_nrtl_partial_pressures
 from permeance import Permeance
@@ -233,7 +234,7 @@ class DiffusionCurve:
         ]
 
     @classmethod
-    def from_csv(cls, path: typing.Union[str, Path]) -> "DiffusionCurve":
+    def from_frame(cls, frame: pandas.DataFrame) -> 'DiffusionCurve':
         pass
 
 
@@ -242,9 +243,25 @@ class DiffusionCurveSet:
     """
     A class for storing and working with multiple diffusion curves related to the same set of experiments.
     """
-
-    name_of_the_set: str
+    name: str
     diffusion_curves: typing.List[DiffusionCurve]
 
     def __getitem__(self, item):
         return self.diffusion_curves[item]
+
+    @classmethod
+    def from_csv(cls, path: typing.Union[str, Path]) -> 'DiffusionCurveSet':
+        if path is not Path:
+            path = Path(path)
+
+        raw_file = pandas.read_csv(path)
+        if 'curve_id' not in raw_file.columns:
+            raise KeyError('Missing curve_id column in %s' % path)
+
+        curve_frames = raw_file.groupby('curve_id')
+        return DiffusionCurveSet(
+            name=path.stem,
+            diffusion_curves=[
+                DiffusionCurve.from_frame(frame=frame) for _, frame in curve_frames
+            ]
+        )
