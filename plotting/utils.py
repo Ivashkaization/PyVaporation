@@ -25,9 +25,10 @@ def plot_diffusion_curve(
 
 
 def plot_diffusion_surface(
-        function: PervaporationFunction,
-        t_min: float,
-        t_max: float,
+    function: PervaporationFunction,
+    t_min: float,
+    t_max: float,
+    # TODO: optional scatter experiment data
 ) -> None:
     x = numpy.linspace(0, 1, 100)
     t = numpy.linspace(t_min, t_max, 100)
