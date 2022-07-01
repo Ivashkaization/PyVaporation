@@ -89,18 +89,16 @@ def get_nrtl_partial_pressures(
     if composition.type == CompositionType.weight:
         composition = composition.to_molar(mixture=mixture)
 
-    tau = numpy.array(
+    tau: numpy.ndarray = numpy.array(
         [
             (mixture.nrtl_params.a12 + mixture.nrtl_params.g12 / (R * temperature)),
             (mixture.nrtl_params.a21 + mixture.nrtl_params.g21 / (R * temperature)),
         ]
     )
     if mixture.nrtl_params.alpha21 is None:
-        alphas = mixture.nrtl_params.alpha12
+        g_exp = numpy.exp(numpy.multiply(-tau, mixture.nrtl_params.alpha12))
     else:
-        alphas = [mixture.nrtl_params.alpha12, mixture.nrtl_params.alpha21]
-
-    g_exp = numpy.exp(numpy.multiply(-tau, alphas))
+        g_exp = numpy.exp(numpy.multiply(-tau, [mixture.nrtl_params.alpha12, mixture.nrtl_params.alpha21]))
 
     activity_coefficients = [
         numpy.exp(

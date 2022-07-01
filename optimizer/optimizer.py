@@ -3,9 +3,9 @@ from copy import copy
 from pathlib import Path
 
 import attr
-import joblib
+import joblib  # type: ignore
 import numpy
-from scipy import optimize
+from scipy import optimize  # type: ignore
 
 from diffusion_curve import DiffusionCurve, DiffusionCurveSet
 from plotting import plot_graph, plot_surface
@@ -38,7 +38,7 @@ class Measurements:
                 Measurement(
                     x=curve.feed_compositions[i].first,
                     t=curve.feed_temperature,
-                    p=curve.permeances[i][0].value,
+                    p=curve.permeances[i][0].value,  # type: ignore
                 )
                 for i in range(len(curve))
             ]
@@ -54,7 +54,7 @@ class Measurements:
                 Measurement(
                     x=curve.feed_compositions[i].first,
                     t=curve.feed_temperature,
-                    p=curve.permeances[i][1].value,
+                    p=curve.permeances[i][1].value,  # type: ignore
                 )
                 for i in range(len(curve))
             ]

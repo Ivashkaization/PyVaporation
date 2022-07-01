@@ -1,13 +1,13 @@
 import typing
 
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt  # type: ignore
 import numpy
 
 
 def plot_graph(
     x_label: str,
     y_label: str,
-    points: {str: typing.Tuple[typing.List[float], typing.List[float], bool]},
+    points: typing.Mapping[str, typing.Tuple[typing.List[float], typing.List[float], bool]],
     title: typing.Optional[str] = "",
 ):
     """
@@ -47,7 +47,7 @@ def plot_surface(
     p: typing.List[float],
     t_min: float,
     t_max: float,
-    x_v: numpy.array,
+    x_v: numpy.ndarray,
 ):
 
     fig = plt.figure()

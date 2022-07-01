@@ -3,7 +3,7 @@ from pathlib import Path
 
 import attr
 import numpy
-import pandas
+import pandas  # type: ignore
 
 from mixtures import (Composition, CompositionType, Mixture, Mixtures,
                       get_nrtl_partial_pressures)
@@ -198,7 +198,7 @@ class DiffusionCurve:
     def __len__(self):
         return len(self.feed_compositions)
 
-    def plot(self, y: typing.List, y_label: str = "", curve: bool = 1):
+    def plot(self, y: typing.List, y_label: str = "", curve: bool = True):
         """
         Draws basic plot of a specified parameter versus first component fraction in the feed
         :param y: parameter
@@ -270,7 +270,7 @@ class DiffusionCurve:
         """
         return [
             Composition(
-                self.partial_fluxes[i][0] / (sum(self.partial_fluxes[i])),
+                self.partial_fluxes[i][0] / (sum(self.partial_fluxes[i])),  # type: ignore
                 type=CompositionType.weight,
             )
             for i in range(len(self.feed_compositions))
@@ -297,10 +297,10 @@ class DiffusionCurve:
         :return - List of PSI
         """
         total_flux = [
-            sum(self.partial_fluxes[i]) for i in range(len(self.feed_compositions))
+            sum(self.partial_fluxes[i]) for i in range(len(self.feed_compositions))  # type: ignore
         ]
         separation_factor = self.get_separation_factor
-        return numpy.multiply(total_flux, numpy.subtract(separation_factor, 1))
+        return list(numpy.multiply(total_flux, numpy.subtract(separation_factor, 1)))
 
     @property
     def get_permeances(self) -> typing.List[typing.Tuple[Permeance, Permeance]]:
@@ -318,11 +318,11 @@ class DiffusionCurve:
                 self.permeances = [
                     (
                         Permeance(
-                            value=self.partial_fluxes[i][0]
+                            value=self.partial_fluxes[i][0]  # type: ignore
                             / feed_partial_pressures[i][0]
                         ),
                         Permeance(
-                            value=self.partial_fluxes[i][1]
+                            value=self.partial_fluxes[i][1]  # type: ignore
                             / feed_partial_pressures[i][1]
                         ),
                     )
@@ -338,14 +338,14 @@ class DiffusionCurve:
                 self.permeances = [
                     (
                         Permeance(
-                            value=self.partial_fluxes[i][0]
+                            value=self.partial_fluxes[i][0]  # type: ignore
                             / (
                                 feed_partial_pressures[i][0]
                                 - permeate_partial_pressures[i][0]
                             )
                         ),
                         Permeance(
-                            value=self.partial_fluxes[i][1]
+                            value=self.partial_fluxes[i][1]  # type: ignore
                             / (
                                 feed_partial_pressures[i][1]
                                 - permeate_partial_pressures[i][1]
@@ -354,6 +354,8 @@ class DiffusionCurve:
                     )
                     for i in range(len(self.feed_compositions))
                 ]
+            return self.permeances
+
 
     @property
     def get_selectivity(
@@ -365,8 +367,8 @@ class DiffusionCurve:
         """
         permeances = self.permeances
         return [
-            permeances[i][0].convert("SI", self.mixture.first_component).value
-            / permeances[i][1].convert("SI", self.mixture.second_component).value
+            permeances[i][0].convert("SI", self.mixture.first_component).value  # type: ignore
+            / permeances[i][1].convert("SI", self.mixture.second_component).value  # type: ignore
             for i in range(len(self.feed_compositions))
         ]
 
@@ -452,11 +454,11 @@ class DiffusionCurve:
             {
                 "composition": [c.p for c in self.feed_compositions],
                 "composition_type": [c.type for c in self.feed_compositions],
-                "partial_flux_1": [f[0] for f in self.partial_fluxes],
-                "partial_flux_2": [f[1] for f in self.partial_fluxes],
-                "permeance_1": [p[0].value for p in self.permeances],
-                "permeance_2": [p[1].value for p in self.permeances],
-                "units": [p[0].units for p in self.permeances],
+                "partial_flux_1": [f[0] for f in self.partial_fluxes],  # type: ignore
+                "partial_flux_2": [f[1] for f in self.partial_fluxes],  # type: ignore
+                "permeance_1": [p[0].value for p in self.permeances],  # type: ignore
+                "permeance_2": [p[1].value for p in self.permeances],  # type: ignore
+                "units": [p[0].units for p in self.permeances],  # type: ignore
             }
         )
         output["curve_id"] = "1"
@@ -479,8 +481,11 @@ class DiffusionCurveSet:
     name: str
     diffusion_curves: typing.List[DiffusionCurve]
 
-    def __getitem__(self, item):
+    def __getitem__(self, item) -> DiffusionCurve:
         return self.diffusion_curves[item]
+
+    def __len__(self) -> int:
+        return len(self.diffusion_curves)
 
     @classmethod
     def load(cls, path: Path) -> "DiffusionCurveSet":

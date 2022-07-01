@@ -8,7 +8,7 @@ from utils import (HeatCapacityConstants, R, VaporPressureConstants,
 @attr.s(auto_attribs=True)
 class Component:
     name: str
-    molecular_weight: float = attr.ib(converter=lambda value: float(value))
+    molecular_weight: float = attr.ib(converter=lambda value: float(value))  # type: ignore
     vapour_pressure_constants: VaporPressureConstants
     heat_capacity_constants: HeatCapacityConstants
 

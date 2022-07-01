@@ -2,7 +2,7 @@ import typing
 from pathlib import Path
 
 import attr
-import pandas
+import pandas  # type: ignore
 
 from components import Component, Components
 from permeance import Permeance, Units
@@ -36,17 +36,17 @@ class IdealExperiment:
     def from_dict(
         cls, d: typing.Mapping[str, typing.Union[str, float]]
     ) -> "IdealExperiment":
-        component = getattr(Components, d["component"])
-        permeance = Permeance(value=d["permeance"], units=d["units"]).convert(
+        component = getattr(Components, d["component"])  # type: ignore
+        permeance = Permeance(value=d["permeance"], units=d["units"]).convert(  # type: ignore
             to_units=Units.kg_m2_h_kPa, component=component
         )
         return cls(
-            name=d["name"],
-            temperature=d["temperature"],
+            name=d["name"],  # type: ignore
+            temperature=d["temperature"],  # type: ignore
             component=component,
             permeance=permeance,
-            activation_energy=d["activation_energy"],
-            comment=d["comment"],
+            activation_energy=d["activation_energy"],  # type: ignore
+            comment=d["comment"],  # type: ignore
         )
 
 

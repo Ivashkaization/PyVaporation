@@ -17,7 +17,7 @@ class VaporPressureConstants:
     c: float = attr.ib(converter=lambda value: float(value))  # type: ignore
     type: str = attr.ib(
         default=VPConstantsType.antoine,
-        converter=lambda x: getattr(VPConstantsType, x)
+        converter=lambda x: getattr(VPConstantsType, x)  # type: ignore
         if x is not None
         else VPConstantsType.antoine,
     )  # type: ignore
@@ -29,8 +29,8 @@ class NRTLParameters:
     g21: float
     alpha12: float
     alpha21: typing.Optional[float] = None
-    a12: typing.Optional[float] = 0
-    a21: typing.Optional[float] = 0
+    a12: float = 0
+    a21: float = 0
 
 
 @attr.s(auto_attribs=True)

@@ -13,7 +13,7 @@ class Units:
 
 @attr.s(auto_attribs=True)
 class Permeance:
-    value: float = attr.ib(converter=lambda x: x if x >= 0 else 0)
+    value: float = attr.ib(converter=lambda x: x if x >= 0 else 0)  # type: ignore
     units: str = Units.kg_m2_h_kPa
 
     def __add__(self, other: "Permeance") -> "Permeance":
